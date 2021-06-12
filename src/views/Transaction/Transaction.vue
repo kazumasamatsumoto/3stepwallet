@@ -27,9 +27,15 @@ import {
 import {
   Account,
   Address,
+  AggregateTransaction,
   Deadline,
+  HashLockTransaction,
+  Mosaic,
+  MosaicId,
   PlainMessage,
+  PublicAccount,
   RepositoryFactoryHttp,
+  TransactionService,
   TransferTransaction,
   UInt64
 } from "symbol-sdk";
@@ -51,44 +57,116 @@ export default {
     },
 
     testFunction: async function(): Promise<void> {
-      const nodeUrl = "http://sym-test-01.opening-line.jp:3000";
-      const repositoryFactory = new RepositoryFactoryHttp(nodeUrl);
-      const epochAdjustment = await repositoryFactory
-        .getEpochAdjustment()
-        .toPromise();
-      const networkType = await repositoryFactory.getNetworkType().toPromise();
-      const networkGenerationHash = await repositoryFactory
-        .getGenerationHash()
-        .toPromise();
-      const { currency } = await repositoryFactory.getCurrencies().toPromise();
+      try {
+        const nodeUrl = "http://ngl-dual-601.testnet.symboldev.network:3000";
+        const repositoryFactory = new RepositoryFactoryHttp(nodeUrl, {
+          websocketUrl: "ws://ngl-dual-601.testnet.symboldev.network:3000/ws",
+          websocketInjected: WebSocket
+        });
+        const epochAdjustment = await repositoryFactory
+          .getEpochAdjustment()
+          .toPromise();
+        const networkType = await repositoryFactory
+          .getNetworkType()
+          .toPromise();
+        const networkGenerationHash = await repositoryFactory
+          .getGenerationHash()
+          .toPromise();
 
-      const rawAddress = "TBUKFL-3BMEXY-BDQYBV-5Y7UOW-NRM3TD-RZ4PNF-CZQ";
-      const recipientAddress = Address.createFromRawAddress(rawAddress);
+        console.log(networkType, networkGenerationHash);
 
-      const transferTransaction = TransferTransaction.create(
-        Deadline.create(epochAdjustment),
-        recipientAddress,
-        [currency.createRelative(10)],
-        PlainMessage.create("This is a test message"),
-        networkType,
-        UInt64.fromUint(2000000)
-      );
+        // replace with cosignatory private key
+        const cosignatoryPrivateKey =
+          "2F8F16D66BD2CC8774B509A1D1A57718CD6F205C04918C5A9FB91A8A2B673088";
+        const cosignatoryAccount = Account.createFromPrivateKey(
+          cosignatoryPrivateKey,
+          networkType
+        );
+        console.log(cosignatoryAccount, "署名者のアカウント");
+        // replace with multisig account public key
+        const multisigAccountPublicKey =
+          "A8241EDA0FF5BABB607B19D5BDB9FA383166E7AEB61E7D4DDA11F3E4370E7325";
+        const multisigAccount = PublicAccount.createFromPublicKey(
+          multisigAccountPublicKey,
+          networkType
+        );
+        console.log(multisigAccount, "マルチシグのアカウント");
+        // replace with recipient address
+        const recipientRawAddress =
+          "TBUKFL-3BMEXY-BDQYBV-5Y7UOW-NRM3TD-RZ4PNF-CZQ";
+        const recipientAddress = Address.createFromRawAddress(
+          recipientRawAddress
+        );
+        // replace with symbol.xym id
+        const networkCurrencyMosaicId = new MosaicId("091F837E059AE13C");
+        // replace with network currency divisibility
+        const networkCurrencyDivisibility = 6;
 
-      const privateKey =
-        "015591B6B39D534173CA123546C4FFB2986B0F3996F056DB601C2A63F504F87E";
-      const account = Account.createFromPrivateKey(privateKey, networkType);
-      const signedTransaction = account.sign(
-        transferTransaction,
-        networkGenerationHash
-      );
-      console.log("Payload:", signedTransaction.payload);
-      console.log("Transaction Hash:", signedTransaction.hash);
-
-      const transactionRepository = repositoryFactory.createTransactionRepository();
-      const response = await transactionRepository
-        .announce(signedTransaction)
-        .toPromise();
-      console.log(response);
+        const transferTransaction = TransferTransaction.create(
+          Deadline.create(epochAdjustment),
+          recipientAddress,
+          [
+            new Mosaic(
+              networkCurrencyMosaicId,
+              UInt64.fromUint(10 * Math.pow(10, networkCurrencyDivisibility))
+            )
+          ],
+          PlainMessage.create("sending 10 symbol.xym"),
+          networkType
+        );
+        /* start block 01 */
+        const aggregateTransaction = AggregateTransaction.createBonded(
+          Deadline.create(epochAdjustment),
+          [transferTransaction.toAggregate(multisigAccount)],
+          networkType,
+          [],
+          UInt64.fromUint(2000000)
+        );
+        // replace with meta.networkGenerationHash (nodeUrl + '/node/info')
+        const signedTransaction = cosignatoryAccount.sign(
+          aggregateTransaction,
+          networkGenerationHash
+        );
+        console.log(signedTransaction.hash);
+        const hashLockTransaction = HashLockTransaction.create(
+          Deadline.create(epochAdjustment),
+          new Mosaic(
+            networkCurrencyMosaicId,
+            UInt64.fromUint(10 * Math.pow(10, networkCurrencyDivisibility))
+          ),
+          UInt64.fromUint(480),
+          signedTransaction,
+          networkType,
+          UInt64.fromUint(2000000)
+        );
+        const signedHashLockTransaction = cosignatoryAccount.sign(
+          hashLockTransaction,
+          networkGenerationHash
+        );
+        // replace with node endpoint
+        const listener = repositoryFactory.createListener();
+        const receiptHttp = repositoryFactory.createReceiptRepository();
+        const transactionHttp = repositoryFactory.createTransactionRepository();
+        const transactionService = new TransactionService(
+          transactionHttp,
+          receiptHttp
+        );
+        listener.open().then(() => {
+          transactionService
+            .announceHashLockAggregateBonded(
+              signedHashLockTransaction,
+              signedTransaction,
+              listener
+            )
+            .subscribe(
+              x => console.log(x),
+              err => console.log(err),
+              () => listener.close()
+            );
+        });
+      } catch (error) {
+        console.log(error);
+      }
     }
   }
 };
