@@ -24,7 +24,7 @@ import {
   IonLabel,
   IonButton
 } from "@ionic/vue";
-import { testFunction } from "../../util/symbol";
+import { multisigTransaction } from "../../util/symbol";
 
 export default {
   name: "Tab1",
@@ -39,7 +39,7 @@ export default {
   },
   methods: {
     sampleFunction: function() {
-      testFunction().then();
+      multisigTransaction().then();
     }
   }
 };

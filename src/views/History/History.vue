@@ -9,7 +9,7 @@
       <ion-label>
         履歴ページ
       </ion-label>
-      <ion-button @click="testFunction">
+      <ion-button @click="sampleFunction">
         サンプル
       </ion-button>
     </ion-content>
@@ -26,7 +26,7 @@ import {
   IonLabel,
   IonButton
 } from "@ionic/vue";
-import { Account, NetworkType } from "symbol-sdk";
+import { getTransactionList } from "../../util/symbol";
 
 export default {
   name: "Tab2",
@@ -40,24 +40,9 @@ export default {
     IonButton
   },
   methods: {
-    sampleFunction: function() {
-      console.log("test");
-    },
-
-    testFunction: function() {
-      const privateKey =
-        "0000000000000000000000000000000000000000000000000000000000000000";
-
-      const account = Account.createFromPrivateKey(
-        privateKey,
-        NetworkType.TEST_NET
-      );
-      console.log(
-        "Your account address is:",
-        account.address.pretty(),
-        "and its private key",
-        account.privateKey
-      );
+    sampleFunction: async function() {
+      const sample = await getTransactionList().then();
+      console.log(sample);
     }
   }
 };
