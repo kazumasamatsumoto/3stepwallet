@@ -12,6 +12,9 @@
       <ion-button @click="sampleFunction">
         サンプル
       </ion-button>
+      <ion-button @click="sampleFunction2">
+        サンプル2
+      </ion-button>
     </ion-content>
   </ion-page>
 </template>
@@ -26,7 +29,10 @@ import {
   IonLabel,
   IonButton
 } from "@ionic/vue";
-import { getTransactionList } from "../../util/symbol";
+import {
+  getTransactionList,
+  getUnConfirmTransactionList
+} from "../../util/symbol";
 
 export default {
   name: "Tab2",
@@ -41,8 +47,10 @@ export default {
   },
   methods: {
     sampleFunction: async function() {
-      const sample = await getTransactionList().then();
-      console.log(sample);
+      getTransactionList().then();
+    },
+    sampleFunction2: async function() {
+      const sample = getUnConfirmTransactionList();
     }
   }
 };
