@@ -142,10 +142,10 @@ export const getTransactionList = async function() {
       pageNumber: 1,
       pageSize: 100,
     };
-    transactionHttp.search(searchCriteria).subscribe(
-      async (page) => console.log("承認", page.data),
-      (err) => console.error(err)
-    );
+    const page = await transactionHttp.search(searchCriteria).toPromise();
+    const sample = page.data
+    console.log(sample)
+    return sample;
   } catch (error) {
     console.log(error);
   }
