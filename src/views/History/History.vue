@@ -6,11 +6,9 @@
       </ion-toolbar>
     </ion-header>
     <ion-content>
-      <ion-label> トランザクションの履歴 </ion-label>
-      <ion-button @click="getTransactionList"> サンプル </ion-button>
-      <ion-button @click="getUnConfirmTransactionList"> サンプル2 </ion-button>
+      <ion-label> 未承認トランザクション </ion-label>
       <ul id="example-1" style="list-style: none;">
-        <li v-for="item in confirmtransaction" :key="item.transactionInfo.hash">
+        <li v-for="item in sample" :key="item.transactionInfo.hash">
           <ion-card>
             <ion-card-content>
               type: {{ item.type }} <br />
@@ -20,8 +18,9 @@
           </ion-card>
         </li>
       </ul>
+      <ion-label> 承認済みトランザクション </ion-label>
       <ul id="example-1" style="list-style: none;">
-        <li v-for="item in sample" :key="item.transactionInfo.hash">
+        <li v-for="item in confirmtransaction" :key="item.transactionInfo.hash">
           <ion-card>
             <ion-card-content>
               type: {{ item.type }} <br />
@@ -43,11 +42,13 @@
     IonTitle,
     IonContent,
     IonLabel,
-    IonButton,
     IonCard,
     IonCardContent,
   } from "@ionic/vue";
-  import { Address, RepositoryFactoryHttp, TransactionGroup } from "symbol-sdk";
+  import {
+    getTransactionList,
+    getUnConfirmTransactionList,
+  } from "@/util/symbol";
 
   export default {
     name: "Tab2",
@@ -58,7 +59,6 @@
       IonContent,
       IonPage,
       IonLabel,
-      IonButton,
       IonCard,
       IonCardContent,
     },
@@ -72,51 +72,13 @@
       confirmtransaction: Array<any>;
       sample: Array<any>;
     }) {
-      try {
-        const rawAddress = "TBHZV7LHG4PIM5GJS6QPFHLR47IRTP5I6USRN3Y";
-        const address = Address.createFromRawAddress(rawAddress);
-        /* end block 01 */
-
-        /* start block 02 */
-        // replace with node endpoint
-        const nodeUrl = process.env.VUE_APP_WEB_SOCKET_URL;
-        const repositoryFactory = new RepositoryFactoryHttp(nodeUrl);
-        const transactionHttp = repositoryFactory.createTransactionRepository();
-
-        const searchCriteria = {
-          group: TransactionGroup.Confirmed,
-          address,
-          pageNumber: 1,
-          pageSize: 100,
-        };
-        const page = await transactionHttp.search(searchCriteria).toPromise();
-        this.confirmtransaction = page.data;
-        console.log("承認済み", page.data);
-      } catch (error) {
-        console.log(error);
+      const test = await getTransactionList();
+      if (test !== undefined) {
+        this.confirmtransaction = test;
       }
-      try {
-        const rawAddress = "TBHZV7LHG4PIM5GJS6QPFHLR47IRTP5I6USRN3Y";
-        const address = Address.createFromRawAddress(rawAddress);
-        /* end block 01 */
-
-        /* start block 02 */
-        // replace with node endpoint
-        const nodeUrl = process.env.VUE_APP_WEB_SOCKET_URL;
-        const repositoryFactory = new RepositoryFactoryHttp(nodeUrl);
-        const transactionHttp = repositoryFactory.createTransactionRepository();
-
-        const searchCriteria = {
-          group: TransactionGroup.Partial,
-          address,
-          pageNumber: 1,
-          pageSize: 100,
-        };
-        const page2 = await transactionHttp.search(searchCriteria).toPromise();
-        this.sample = page2.data;
-        console.log("未承認", page2.data);
-      } catch (error) {
-        console.log(error);
+      const test2 = await getUnConfirmTransactionList();
+      if (test2 !== undefined) {
+        this.sample = test2;
       }
     },
   };

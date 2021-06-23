@@ -13,7 +13,6 @@ import {
   TransferTransaction,
   UInt64,
   TransactionGroup,
-  Transaction,
 } from "symbol-sdk";
 
 export const multisigTransaction = async function(): Promise<void> {
@@ -124,7 +123,7 @@ export const multisigTransaction = async function(): Promise<void> {
   }
 };
 
-export const getTransactionList = async function() {
+export const getTransactionList = async () => {
   try {
     const rawAddress = "TBHZV7LHG4PIM5GJS6QPFHLR47IRTP5I6USRN3Y";
     const address = Address.createFromRawAddress(rawAddress);
@@ -143,41 +142,30 @@ export const getTransactionList = async function() {
       pageSize: 100,
     };
     const page = await transactionHttp.search(searchCriteria).toPromise();
-    const sample = page.data
-    console.log(sample)
-    return sample;
+    return page.data;
   } catch (error) {
     console.log(error);
   }
 };
 
-export const getUnConfirmTransactionList = async function() {
+export const getUnConfirmTransactionList = async () => {
   try {
     const rawAddress = "TBHZV7LHG4PIM5GJS6QPFHLR47IRTP5I6USRN3Y";
     const address = Address.createFromRawAddress(rawAddress);
     /* end block 01 */
-
     /* start block 02 */
     // replace with node endpoint
     const nodeUrl = process.env.VUE_APP_WEB_SOCKET_URL;
     const repositoryFactory = new RepositoryFactoryHttp(nodeUrl);
     const transactionHttp = repositoryFactory.createTransactionRepository();
-    let sample: Transaction[];
-
     const searchCriteria = {
       group: TransactionGroup.Partial,
       address,
       pageNumber: 1,
       pageSize: 100,
     };
-    transactionHttp.search(searchCriteria).subscribe(
-      async (page) => {
-        console.log("未承認", page.data);
-        sample = page.data;
-        return sample;
-      },
-      (err) => console.error(err)
-    );
+    const page2 = await transactionHttp.search(searchCriteria).toPromise();
+    return page2.data;
   } catch (error) {
     console.log(error);
   }
