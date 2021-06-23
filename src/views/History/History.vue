@@ -9,7 +9,17 @@
       <ion-label> トランザクションの履歴 </ion-label>
       <ion-button @click="getTransactionList"> サンプル </ion-button>
       <ion-button @click="getUnConfirmTransactionList"> サンプル2 </ion-button>
-      <p>{{ transaction }}</p>
+      <ul id="example-1" style="list-style: none;">
+        <li v-for="item in transaction" :key="item.transactionInfo.hash">
+          <ion-card>
+            <ion-card-content>
+              type: {{ item.type }} <br />
+              version: {{ item.version }} <br />
+              transactionHash: {{ item.transactionInfo.hash }} <br />
+            </ion-card-content>
+          </ion-card>
+        </li>
+      </ul>
     </ion-content>
   </ion-page>
 </template>
@@ -23,6 +33,8 @@
     IonContent,
     IonLabel,
     IonButton,
+    IonCard,
+    IonCardContent,
   } from "@ionic/vue";
   import { Address, RepositoryFactoryHttp, TransactionGroup } from "symbol-sdk";
 
@@ -36,6 +48,8 @@
       IonPage,
       IonLabel,
       IonButton,
+      IonCard,
+      IonCardContent,
     },
     data: function() {
       return {
@@ -43,6 +57,7 @@
         transaction: "",
       };
     },
+
     methods: {
       sample: function(this: { message: string }) {
         this.message = "updated";
@@ -101,3 +116,11 @@
     },
   };
 </script>
+
+<style>
+  ul,
+  ol {
+    padding: 0;
+    position: relative;
+  }
+</style>
