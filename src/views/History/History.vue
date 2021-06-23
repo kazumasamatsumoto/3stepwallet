@@ -10,7 +10,18 @@
       <ion-button @click="getTransactionList"> サンプル </ion-button>
       <ion-button @click="getUnConfirmTransactionList"> サンプル2 </ion-button>
       <ul id="example-1" style="list-style: none;">
-        <li v-for="item in transaction" :key="item.transactionInfo.hash">
+        <li v-for="item in confirmtransaction" :key="item.transactionInfo.hash">
+          <ion-card>
+            <ion-card-content>
+              type: {{ item.type }} <br />
+              version: {{ item.version }} <br />
+              transactionHash: {{ item.transactionInfo.hash }} <br />
+            </ion-card-content>
+          </ion-card>
+        </li>
+      </ul>
+      <ul id="example-1" style="list-style: none;">
+        <li v-for="item in sample" :key="item.transactionInfo.hash">
           <ion-card>
             <ion-card-content>
               type: {{ item.type }} <br />
@@ -53,66 +64,60 @@
     },
     data: function() {
       return {
-        message: "not updated",
-        transaction: "",
+        confirmtransaction: "",
+        sample: "",
       };
     },
+    async created(this: {
+      confirmtransaction: Array<any>;
+      sample: Array<any>;
+    }) {
+      try {
+        const rawAddress = "TBHZV7LHG4PIM5GJS6QPFHLR47IRTP5I6USRN3Y";
+        const address = Address.createFromRawAddress(rawAddress);
+        /* end block 01 */
 
-    methods: {
-      sample: function(this: { message: string }) {
-        this.message = "updated";
-      },
-      getTransactionList: async function(this: { transaction: Array<any> }) {
-        try {
-          const rawAddress = "TBHZV7LHG4PIM5GJS6QPFHLR47IRTP5I6USRN3Y";
-          const address = Address.createFromRawAddress(rawAddress);
-          /* end block 01 */
+        /* start block 02 */
+        // replace with node endpoint
+        const nodeUrl = process.env.VUE_APP_WEB_SOCKET_URL;
+        const repositoryFactory = new RepositoryFactoryHttp(nodeUrl);
+        const transactionHttp = repositoryFactory.createTransactionRepository();
 
-          /* start block 02 */
-          // replace with node endpoint
-          const nodeUrl = process.env.VUE_APP_WEB_SOCKET_URL;
-          const repositoryFactory = new RepositoryFactoryHttp(nodeUrl);
-          const transactionHttp = repositoryFactory.createTransactionRepository();
+        const searchCriteria = {
+          group: TransactionGroup.Confirmed,
+          address,
+          pageNumber: 1,
+          pageSize: 100,
+        };
+        const page = await transactionHttp.search(searchCriteria).toPromise();
+        this.confirmtransaction = page.data;
+        console.log("承認済み", page.data);
+      } catch (error) {
+        console.log(error);
+      }
+      try {
+        const rawAddress = "TBHZV7LHG4PIM5GJS6QPFHLR47IRTP5I6USRN3Y";
+        const address = Address.createFromRawAddress(rawAddress);
+        /* end block 01 */
 
-          const searchCriteria = {
-            group: TransactionGroup.Confirmed,
-            address,
-            pageNumber: 1,
-            pageSize: 100,
-          };
-          const page = await transactionHttp.search(searchCriteria).toPromise();
-          this.transaction = page.data;
-          console.log("承認済み", page.data);
-        } catch (error) {
-          console.log(error);
-        }
-      },
-      getUnConfirmTransactionList: async function() {
-        try {
-          const rawAddress = "TBHZV7LHG4PIM5GJS6QPFHLR47IRTP5I6USRN3Y";
-          const address = Address.createFromRawAddress(rawAddress);
-          /* end block 01 */
+        /* start block 02 */
+        // replace with node endpoint
+        const nodeUrl = process.env.VUE_APP_WEB_SOCKET_URL;
+        const repositoryFactory = new RepositoryFactoryHttp(nodeUrl);
+        const transactionHttp = repositoryFactory.createTransactionRepository();
 
-          /* start block 02 */
-          // replace with node endpoint
-          const nodeUrl = process.env.VUE_APP_WEB_SOCKET_URL;
-          const repositoryFactory = new RepositoryFactoryHttp(nodeUrl);
-          const transactionHttp = repositoryFactory.createTransactionRepository();
-
-          const searchCriteria = {
-            group: TransactionGroup.Partial,
-            address,
-            pageNumber: 1,
-            pageSize: 100,
-          };
-          const page2 = await transactionHttp
-            .search(searchCriteria)
-            .toPromise();
-          console.log("未承認", page2.data);
-        } catch (error) {
-          console.log(error);
-        }
-      },
+        const searchCriteria = {
+          group: TransactionGroup.Partial,
+          address,
+          pageNumber: 1,
+          pageSize: 100,
+        };
+        const page2 = await transactionHttp.search(searchCriteria).toPromise();
+        this.sample = page2.data;
+        console.log("未承認", page2.data);
+      } catch (error) {
+        console.log(error);
+      }
     },
   };
 </script>
