@@ -15,6 +15,7 @@
               version: {{ item.version }} <br />
               transactionHash: {{ item.transactionInfo.hash }} <br />
             </ion-card-content>
+            <ion-button @click="presentAlert(item)">Show Alert</ion-button>
           </ion-card>
         </li>
       </ul>
@@ -44,6 +45,8 @@
     IonLabel,
     IonCard,
     IonCardContent,
+    alertController,
+    IonButton,
   } from "@ionic/vue";
   import {
     getTransactionList,
@@ -61,6 +64,7 @@
       IonLabel,
       IonCard,
       IonCardContent,
+      IonButton,
     },
     data: function() {
       return {
@@ -80,6 +84,18 @@
       if (test2 !== undefined) {
         this.sample = test2;
       }
+    },
+    methods: {
+      async presentAlert(item: any) {
+        const alert = await alertController.create({
+          cssClass: "my-custom-class",
+          header: "Alert",
+          subHeader: "Subtitle",
+          message: item.transactionInfo.hash,
+          buttons: ["OK", "NG"],
+        });
+        return alert.present();
+      },
     },
   };
 </script>
