@@ -31,29 +31,31 @@ export const testCosign = function(hash: string) {
 
   /* start block 03 */
   const nodeUrl = process.env.VUE_APP_WEB_SOCKET_URL;
-  const repositoryFactory = new RepositoryFactoryHttp(nodeUrl, {
-    websocketUrl: "ws://ngl-dual-601.testnet.symboldev.network:3000/ws",
-    websocketInjected: WebSocket,
-  });
-  const transactionHttp = repositoryFactory.createTransactionRepository();
+  if (nodeUrl) {
+    const repositoryFactory = new RepositoryFactoryHttp(nodeUrl, {
+      websocketUrl: "ws://ngl-dual-601.testnet.symboldev.network:3000/ws",
+      websocketInjected: WebSocket,
+    });
+    const transactionHttp = repositoryFactory.createTransactionRepository();
 
-  transactionHttp
-    .getTransaction(transactionHash, TransactionGroup.Partial)
-    .pipe(
-      map((transaction) =>
-        cosignAggregateBondedTransaction(
-          transaction as AggregateTransaction,
-          account
-        )
-      ),
-      mergeMap((cosignatureSignedTransaction) =>
-        transactionHttp.announceAggregateBondedCosignature(
-          cosignatureSignedTransaction
+    transactionHttp
+      .getTransaction(transactionHash, TransactionGroup.Partial)
+      .pipe(
+        map((transaction) =>
+          cosignAggregateBondedTransaction(
+            transaction as AggregateTransaction,
+            account
+          )
+        ),
+        mergeMap((cosignatureSignedTransaction) =>
+          transactionHttp.announceAggregateBondedCosignature(
+            cosignatureSignedTransaction
+          )
         )
       )
-    )
-    .subscribe(
-      (announcedTransaction) => console.log(announcedTransaction),
-      (err) => console.error(err)
-    );
+      .subscribe(
+        (announcedTransaction) => console.log(announcedTransaction),
+        (err) => console.error(err)
+      );
+  }
 };

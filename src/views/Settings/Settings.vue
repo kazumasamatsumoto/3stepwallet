@@ -24,6 +24,7 @@
     IonButton,
   } from "@ionic/vue";
   import { createTodo } from "@/graphql/mutations";
+  import { API, graphqlOperation } from "aws-amplify";
 
   export default {
     name: "Tab3",
@@ -36,8 +37,16 @@
       IonButton,
     },
     methods: {
-      testFunction() {
-        createTodo;
+      testFunction: async () => {
+        await API.graphql(
+          graphqlOperation(createTodo, {
+            input: {
+              id: "test",
+              name: "matsumoto",
+              count: 10,
+            },
+          })
+        );
       },
     },
   };
