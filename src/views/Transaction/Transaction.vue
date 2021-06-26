@@ -9,7 +9,7 @@
       <ion-label>
         トランザクションページ
       </ion-label>
-      <ion-button href="/tabs/sending">送信</ion-button>
+      <ion-button @click="sampleFunction">送信</ion-button>
     </ion-content>
   </ion-page>
 </template>
@@ -20,8 +20,11 @@ import {
   IonHeader,
   IonToolbar,
   IonTitle,
-  IonContent
+  IonContent,
+  IonLabel,
+  IonButton
 } from "@ionic/vue";
+import { multisigTransaction } from "../../util/symbol";
 
 export default {
   name: "Tab1",
@@ -30,7 +33,14 @@ export default {
     IonToolbar,
     IonTitle,
     IonPage,
-    IonContent
+    IonContent,
+    IonLabel,
+    IonButton
+  },
+  methods: {
+    sampleFunction: function() {
+      multisigTransaction().then();
+    }
   }
 };
 </script>
