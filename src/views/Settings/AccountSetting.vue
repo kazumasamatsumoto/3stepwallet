@@ -17,7 +17,8 @@ import {
   IonHeader,
   IonToolbar,
   IonTitle,
-  IonContent
+  IonContent,
+  IonButton
 } from "@ionic/vue";
 
 export default {
@@ -27,7 +28,8 @@ export default {
     IonToolbar,
     IonTitle,
     IonContent,
-    IonPage
+    IonPage,
+    IonButton
   }
 };
 </script>
