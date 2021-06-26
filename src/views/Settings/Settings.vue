@@ -8,28 +8,37 @@
     <ion-content>
       <ion-button href="/tabs/account-setting">アカウント設定</ion-button>
     </ion-content>
+    <ion-content>
+      <ion-button @click="testFunction">テスト</ion-button>
+    </ion-content>
   </ion-page>
 </template>
 
 <script lang="ts">
-import {
-  IonPage,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
-  IonContent,
-  IonButton
-} from "@ionic/vue";
-
-export default {
-  name: "Tab3",
-  components: {
+  import {
+    IonPage,
     IonHeader,
     IonToolbar,
     IonTitle,
     IonContent,
-    IonPage,
-    IonButton
-  }
-};
+    IonButton,
+  } from "@ionic/vue";
+  import { createTodo } from "@/graphql/mutations";
+
+  export default {
+    name: "Tab3",
+    components: {
+      IonHeader,
+      IonToolbar,
+      IonTitle,
+      IonContent,
+      IonPage,
+      IonButton,
+    },
+    methods: {
+      testFunction() {
+        createTodo;
+      },
+    },
+  };
 </script>
