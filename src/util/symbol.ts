@@ -32,7 +32,7 @@ export const multisigTransaction = async function(): Promise<void> {
       mosaicId
     ) {
       const repositoryFactory = new RepositoryFactoryHttp(nodeUrl, {
-        websocketUrl: "ws://ngl-dual-601.testnet.symboldev.network:3000/ws",
+        websocketUrl: nodeUrl.replace("http", "ws") + "/ws",
         websocketInjected: WebSocket,
       });
       const epochAdjustment = await repositoryFactory
@@ -139,7 +139,7 @@ export const multisigTransaction = async function(): Promise<void> {
 
 export const getTransactionList = async () => {
   try {
-    const rawAddress = "TBHZV7LHG4PIM5GJS6QPFHLR47IRTP5I6USRN3Y";
+    const rawAddress = "TBUKFL3BMEXYBDQYBV5Y7UOWNRM3TDRZ4PNFCZQ";
     const address = Address.createFromRawAddress(rawAddress);
     /* end block 01 */
 
@@ -156,8 +156,20 @@ export const getTransactionList = async () => {
         pageNumber: 1,
         pageSize: 100,
       };
+      const transactionInfo = [];
       const page = await transactionHttp.search(searchCriteria).toPromise();
-      return page.data;
+      for (let i = 0; i < page.data.length; i++) {
+        if (page.data[i] instanceof AggregateTransaction) {
+          const txHash = page.data[i].transactionInfo?.hash as string;
+          const test = (await transactionHttp
+            .getTransaction(txHash, TransactionGroup.Confirmed)
+            .toPromise()) as AggregateTransaction;
+          const sample = test.innerTransactions[0] as TransferTransaction;
+          console.log(sample, `${i}番目`);
+          transactionInfo.push(sample);
+        }
+      }
+      return transactionInfo;
     }
   } catch (error) {
     console.log(error);

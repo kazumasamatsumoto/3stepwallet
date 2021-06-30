@@ -23,12 +23,15 @@
       </ul>
       <ion-label> 承認済みトランザクション </ion-label>
       <ul id="example-1" style="list-style: none;">
-        <li v-for="item in confirmtransaction" :key="item.transactionInfo.hash">
+        <li
+          v-for="item in confirmtransaction"
+          :key="item.transactionInfo.aggregateHash"
+        >
           <ion-card>
             <ion-card-content>
-              type: {{ item.type }} <br />
-              version: {{ item.version }} <br />
-              transactionHash: {{ item.transactionInfo.hash }} <br />
+              送金金額: {{ item.mosaics[0].amount.lower / 1000000 }} xym
+              <br />
+              message: {{ item.message.payload }}
             </ion-card-content>
           </ion-card>
         </li>
