@@ -86,9 +86,8 @@ export const multisigTransaction = async function(): Promise<void> {
         Deadline.create(epochAdjustment),
         [transferTransaction.toAggregate(multisigAccount)],
         networkType,
-        [],
-        UInt64.fromUint(2000000)
-      );
+        []
+      ).setMaxFeeForAggregate(3000, 4);
       // replace with meta.networkGenerationHash (nodeUrl + '/node/info')
       const signedTransaction = cosignatoryAccount.sign(
         aggregateTransaction,
@@ -101,11 +100,10 @@ export const multisigTransaction = async function(): Promise<void> {
           networkCurrencyMosaicId,
           UInt64.fromUint(10 * Math.pow(10, networkCurrencyDivisibility))
         ),
-        UInt64.fromUint(480),
+        UInt64.fromUint(5760),
         signedTransaction,
-        networkType,
-        UInt64.fromUint(2000000)
-      );
+        networkType
+      ).setMaxFee(3000);
       const signedHashLockTransaction = cosignatoryAccount.sign(
         hashLockTransaction,
         networkGenerationHash
