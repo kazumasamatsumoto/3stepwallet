@@ -9,7 +9,8 @@
       "UnauthRoleName": "amplify-3stepwallet-dev-162810-unauthRole",
       "StackName": "amplify-3stepwallet-dev-162810",
       "StackId": "arn:aws:cloudformation:ap-northeast-1:786146356528:stack/amplify-3stepwallet-dev-162810/114ae1e0-d650-11eb-8a68-0a4ab4a84881",
-      "AmplifyAppId": "d555r1uwowt5g"
+      "AmplifyAppId": "d555r1uwowt5g",
+      "AuthTriggerTemplateURL": ""
     },
     "categories": {
       "auth": {

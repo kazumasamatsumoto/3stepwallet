@@ -30,6 +30,10 @@ import {
 
 import Amplify from "aws-amplify";
 import awsmobile from "./aws-exports";
+
+// vuex
+import { store } from "./store";
+
 Amplify.configure(awsmobile);
 
 applyPolyfills().then(() => {
@@ -37,6 +41,7 @@ applyPolyfills().then(() => {
 });
 
 const app = createApp(App)
+  .use(store)
   .use(IonicVue)
   .use(router);
 
