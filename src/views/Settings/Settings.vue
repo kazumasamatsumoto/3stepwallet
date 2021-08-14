@@ -21,7 +21,7 @@
               <ion-button @click="updateFunction(item.id)"
                 >残り回数リセット</ion-button
               >
-              <ion-button @click="setDatas(item.id, item.name, item.count)"
+              <ion-button @click="setDatas(item.id)"
                 >買い物するユーザーを選択します</ion-button
               >
             </ion-card-content>
@@ -33,102 +33,92 @@
 </template>
 
 <script lang="ts">
-  import {
-    IonPage,
+import {
+  IonPage,
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonContent,
+  IonButton,
+  IonLabel,
+  IonCard,
+  IonCardContent,
+} from "@ionic/vue";
+import { createTodo, updateTodo } from "@/graphql/mutations";
+import { API, graphqlOperation } from "aws-amplify";
+import { listTodos } from "@/graphql/queries";
+import { ListTodosQuery } from "@/API";
+import { ref } from "vue";
+
+export default {
+  name: "Tab3",
+  components: {
     IonHeader,
     IonToolbar,
     IonTitle,
     IonContent,
+    IonPage,
     IonButton,
+
     IonLabel,
     IonCard,
     IonCardContent,
-  } from "@ionic/vue";
-  import { createTodo, updateTodo } from "@/graphql/mutations";
-  import { API, graphqlOperation } from "aws-amplify";
-  import { listTodos } from "@/graphql/queries";
-  import { ListTodosQuery } from "@/API";
-  import { Plugins } from "@capacitor/core";
-  import { ref } from "vue";
+  },
+  data: function() {
+    return {
+      storageData: "",
+    };
+  },
+  setup() {
+    const test = ref([]);
+    const name = ref("");
 
-  const { Storage } = Plugins;
-
-  export default {
-    name: "Tab3",
-    components: {
-      IonHeader,
-      IonToolbar,
-      IonTitle,
-      IonContent,
-      IonPage,
-      IonButton,
-
-      IonLabel,
-      IonCard,
-      IonCardContent,
+    // eslint-disable-next-line vue/no-dupe-keys
+    return { test, name };
+  },
+  created() {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+    // @ts-ignore
+    this.getTodos();
+  },
+  methods: {
+    async createFunction(name: string) {
+      await API.graphql(
+        graphqlOperation(createTodo, {
+          input: {
+            name: name,
+            count: 10,
+          },
+        })
+      );
+      location.href = "/tabs/tab3";
     },
-    data: function() {
-      return {
-        storageData: "",
-      };
+    async updateFunction(id: string) {
+      await API.graphql(
+        graphqlOperation(updateTodo, {
+          input: {
+            id: id,
+            count: 10,
+          },
+        })
+      );
+      location.href = "/tabs/tab3";
     },
-    setup() {
-      const test = ref([]);
-      const name = ref("");
-
-      // eslint-disable-next-line vue/no-dupe-keys
-      return { test, name };
-    },
-    created() {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-      // @ts-ignore
-      this.getTodos();
-    },
-    methods: {
-      async createFunction(name: string) {
-        await API.graphql(
-          graphqlOperation(createTodo, {
-            input: {
-              name: name,
-              count: 10,
-            },
-          })
-        );
-        location.href = "/tabs/tab3";
-      },
-      async updateFunction(id: string) {
-        await API.graphql(
-          graphqlOperation(updateTodo, {
-            input: {
-              id: id,
-              count: 10,
-            },
-          })
-        );
-        location.href = "/tabs/tab3";
-      },
-      async getTodos(this: { test: any }) {
-        console.log("test");
-        const sample = await API.graphql(graphqlOperation(listTodos));
-        if ("data" in sample && sample.data) {
-          const post = sample.data as ListTodosQuery;
-          if (post !== undefined) {
-            this.test = post.listTodos?.items;
-          }
+    async getTodos(this: { test: any }) {
+      console.log("test");
+      const sample = await API.graphql(graphqlOperation(listTodos));
+      if ("data" in sample && sample.data) {
+        const post = sample.data as ListTodosQuery;
+        if (post !== undefined) {
+          this.test = post.listTodos?.items;
         }
-      },
-      async setDatas(user: string, id: string, count: number) {
-        console.log(id);
-        console.log(user);
-        console.log(count);
-        await Storage.set({
-          key: id,
-          value: JSON.stringify({
-            name: user,
-            count: count,
-          }),
-        });
-      },
+      }
     },
-  };
+    async setDatas(id: string) {
+      console.log(id);
+      localStorage.setItem("userId", id);
+      location.href = "/tabs/tab1";
+    },
+  },
+};
 </script>

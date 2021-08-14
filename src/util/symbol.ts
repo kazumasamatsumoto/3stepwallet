@@ -14,8 +14,9 @@ import {
   UInt64,
   TransactionGroup,
 } from "symbol-sdk";
+import { updateFunction } from "./amplifyMethods";
 
-export const multisigTransaction = async function(): Promise<void> {
+export const multisigTransaction = async function(count: any): Promise<void> {
   try {
     console.log(process.env.VUE_APP_WEB_SOCKET_URL);
     const nodeUrl = process.env.VUE_APP_WEB_SOCKET_URL;
@@ -124,7 +125,10 @@ export const multisigTransaction = async function(): Promise<void> {
             listener
           )
           .subscribe(
-            (x) => console.log(x),
+            (x) => {
+              console.log(x);
+              updateFunction(count);
+            },
             (err) => console.log(err),
             () => listener.close()
           );

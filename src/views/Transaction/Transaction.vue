@@ -6,21 +6,10 @@
       </ion-toolbar>
     </ion-header>
     <ion-content>
-      <ion-label> こんにちは{{ value }}さん </ion-label>
+      <ion-label> こんにちは{{ name }}さん </ion-label><br />
+      <ion-label> あなたの残り買い物回数は{{ count }}回です </ion-label>
       <br />
       <ion-button @click="sampleFunction">送信</ion-button>
-      <ion-card>
-        <ion-card-header>
-          State management of the store by dispatching action to change value in
-          store, using the payload passed in my the component
-        </ion-card-header>
-        <ion-card-content>
-          <ion-item>
-            <ion-input type="string" v-model="newValue"></ion-input>
-          </ion-item>
-          <ion-button @click="onChangeTo">Change To</ion-button>
-        </ion-card-content>
-      </ion-card>
     </ion-content>
   </ion-page>
 </template>
@@ -34,17 +23,11 @@ import {
   IonContent,
   IonLabel,
   IonButton,
-  IonCard,
-  IonCardHeader,
-  IonCardContent,
-  IonItem,
-  IonInput,
 } from "@ionic/vue";
 import { multisigTransaction } from "../../util/symbol";
-import { ref } from "@vue/reactivity";
-
-import { useStore } from "vuex";
-import { computed } from "@vue/runtime-core";
+import { API, graphqlOperation } from "aws-amplify";
+import { getTodo } from "@/graphql/queries";
+import { GetTodoQuery } from "@/API";
 
 export default {
   name: "Tab1",
@@ -56,24 +39,39 @@ export default {
     IonContent,
     IonLabel,
     IonButton,
-    IonCard,
-    IonCardContent,
-    IonCardHeader,
-    IonItem,
-    IonInput,
   },
-  setup() {
-    const store = useStore();
-    const newValue = ref<string>("test");
+  created() {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+    // @ts-ignore
+    this.getTodo();
+  },
+  data() {
     return {
-      newValue,
-      value: computed(() => store.state.count),
-      onChangeTo: () => store.dispatch("changeTo", { value: newValue.value }),
+      name: "",
+      count: 0,
     };
   },
   methods: {
-    sampleFunction: function() {
-      multisigTransaction().then();
+    sampleFunction(this: { count: any }): void {
+      multisigTransaction(this.count).then();
+    },
+    async getTodo(this: { name: any; count: any }) {
+      const userId = localStorage.getItem("userId");
+      const sample = await API.graphql(
+        graphqlOperation(getTodo, {
+          id: userId,
+        })
+      );
+      if ("data" in sample && sample.data) {
+        const post = sample.data as GetTodoQuery;
+        if (post !== undefined) {
+          const userData = post.getTodo;
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          this.name = userData!.name;
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          this.count = userData!.count;
+        }
+      }
     },
   },
 };
