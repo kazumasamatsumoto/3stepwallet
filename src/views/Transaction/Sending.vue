@@ -2,14 +2,14 @@
   <ion-page>
     <ion-header>
       <ion-toolbar>
-        <ion-title>送信ページ</ion-title>
+        <ion-title>QRコード動作確認ページ</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content>
       <ion-label>
-        送信ページ
+        QRコード動作確認ページ
       </ion-label>
-      <ion-button href="/tabs/calling">電話確認</ion-button>
+      <ion-button href="/tabs/tab1">トップページへ</ion-button>
     </ion-content>
   </ion-page>
 </template>

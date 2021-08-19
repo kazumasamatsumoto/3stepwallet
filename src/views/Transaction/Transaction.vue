@@ -10,6 +10,8 @@
       <ion-label> あなたの残り買い物回数は{{ count }}回です </ion-label>
       <br />
       <ion-button @click="sampleFunction">送信</ion-button>
+      <ion-button href="/tabs/calling">電話確認</ion-button>
+      <ion-button href="/tabs/sending">QRコード動作確認</ion-button>
     </ion-content>
   </ion-page>
 </template>
