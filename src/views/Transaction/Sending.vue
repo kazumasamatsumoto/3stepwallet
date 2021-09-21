@@ -5,7 +5,7 @@
         <ion-title>カメラ</ion-title>
       </ion-toolbar>
     </ion-header>
-    <ion-content v-if="state">
+    <ion-content v-if="state && !modalState">
       <ion-grid>
         <ion-row><div class="height"></div></ion-row>
         <ion-row>
@@ -19,7 +19,46 @@
         </ion-row>
       </ion-grid>
     </ion-content>
-    <ion-content v-else>
+    <ion-content v-if="state && modalState">
+      <ion-grid>
+        <ion-row><div class="height_2"></div></ion-row>
+        <ion-row>
+          <ion-col>
+            <p class="text_center">購入しますか？</p>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <p class="text_center">商品名 {{ title }}</p>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <p class="text_center">値段 {{ price }} xym</p>
+          </ion-col>
+        </ion-row>
+        <ion-row><div class="height_2"></div></ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-button
+              color="danger"
+              @click="denialMultisigTransaction"
+              class="button_chice"
+              >いいえ</ion-button
+            >
+          </ion-col>
+          <ion-col>
+            <ion-button
+              color="success"
+              @click="confirmMultisigTransaction"
+              class="button_chice"
+              >はい</ion-button
+            >
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-content>
+    <ion-content v-if="!state && modalState">
       <ion-grid>
         <ion-row><div class="height_2"></div></ion-row>
         <ion-row>
@@ -68,20 +107,39 @@
     data() {
       return {
         state: true,
+        price: "",
+        title: "",
+        modalState: false,
       };
     },
     methods: {
-      async openScanner(this: { state: boolean }) {
+      denialMultisigTransaction() {
+        location.href = "/tabs/sending";
+      },
+      confirmMultisigTransaction(this: {
+        price: any;
+        title: any;
+        state: boolean;
+      }) {
+        multisigTransaction(+this.price, this.title).then((v) => {
+          this.state = !this.state;
+          console.log(v, "test");
+        });
+      },
+
+      async openScanner(this: {
+        state: boolean;
+        title: any;
+        price: any;
+        modalState: boolean;
+      }) {
         BarcodeScanner.scan()
           .then((barcodeData) => {
             const sampleData = barcodeData.text;
             const obj = JSON.parse(sampleData);
-            console.log(obj.title);
-            console.log(obj.price);
-            multisigTransaction(9, +obj.price, obj.title).then((v) => {
-              this.state = !this.state;
-              console.log(v, "test");
-            });
+            this.title = obj.title;
+            this.price = obj.price;
+            this.modalState = !this.modalState;
           })
           .catch((err) => {
             console.log("Error", err);
@@ -108,6 +166,12 @@
   .gif_size {
     width: 150px;
     height: 200px;
+    display: block;
+    margin: auto;
+  }
+  .button_chice {
+    width: 100px;
+    height: 80px;
     display: block;
     margin: auto;
   }

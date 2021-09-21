@@ -14,10 +14,8 @@ import {
   UInt64,
   TransactionGroup,
 } from "symbol-sdk";
-import { updateFunction } from "./amplifyMethods";
 
 export const multisigTransaction = async function(
-  count: any,
   price: any,
   title: any
 ): Promise<void> {
@@ -131,10 +129,7 @@ export const multisigTransaction = async function(
           .subscribe(
             (x) => {
               console.log(x);
-              updateFunction(count).then((v) => {
-                console.log(v, "success");
-                location.href = "/tabs/calling";
-              });
+              location.href = "/tabs/calling";
             },
             (err) => console.log(err),
             () => listener.close()
