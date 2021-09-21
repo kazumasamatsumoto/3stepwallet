@@ -1,6 +1,9 @@
-interface Test {
+export interface Test {
   name: string;
   count: number;
 }
 
-export default Test;
+export interface QRObject {
+  title: string;
+  price: string;
+}

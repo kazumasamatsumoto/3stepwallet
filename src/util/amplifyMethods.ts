@@ -12,5 +12,5 @@ export const updateFunction = async function(count: any): Promise<void> {
       },
     })
   );
-  location.href = "/tabs/tab1";
+  location.href = "/tabs/sending";
 };

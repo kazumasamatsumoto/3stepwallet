@@ -16,7 +16,11 @@ import {
 } from "symbol-sdk";
 import { updateFunction } from "./amplifyMethods";
 
-export const multisigTransaction = async function(count: any): Promise<void> {
+export const multisigTransaction = async function(
+  count: any,
+  price: any,
+  title: any
+): Promise<void> {
   try {
     console.log(process.env.VUE_APP_WEB_SOCKET_URL);
     const nodeUrl = process.env.VUE_APP_WEB_SOCKET_URL;
@@ -76,10 +80,10 @@ export const multisigTransaction = async function(count: any): Promise<void> {
         [
           new Mosaic(
             networkCurrencyMosaicId,
-            UInt64.fromUint(10 * Math.pow(10, networkCurrencyDivisibility))
+            UInt64.fromUint(price * Math.pow(10, networkCurrencyDivisibility))
           ),
         ],
-        PlainMessage.create("sending 10 symbol.xym"),
+        PlainMessage.create(`sending ${price} symbol.xym buy ${title}`),
         networkType
       );
       /* start block 01 */
@@ -127,7 +131,10 @@ export const multisigTransaction = async function(count: any): Promise<void> {
           .subscribe(
             (x) => {
               console.log(x);
-              updateFunction(count);
+              updateFunction(count).then((v) => {
+                console.log(v, "success");
+                location.href = "/tabs/calling";
+              });
             },
             (err) => console.log(err),
             () => listener.close()
