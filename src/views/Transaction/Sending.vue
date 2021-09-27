@@ -9,9 +9,18 @@
       <ion-grid>
         <ion-row><div class="height"></div></ion-row>
         <ion-row>
+          <ion-col size="1"></ion-col>
+          <ion-col>
+            <p class="text_center nes-balloon from-right anime_text_center">
+              QRをよみこもう
+            </p>
+          </ion-col>
+          <ion-col size="1"></ion-col>
+        </ion-row>
+        <ion-row>
           <ion-col></ion-col>
           <ion-col>
-            <ion-button @click="openScanner" class="round"
+            <ion-button @click="openScanner" class="round nes-btn is-primary"
               ><img src="../../images/smartphone_qr_code_man.png"
             /></ion-button>
           </ion-col>
@@ -24,17 +33,17 @@
         <ion-row><div class="height_2"></div></ion-row>
         <ion-row>
           <ion-col>
-            <p class="text_center">購入しますか？</p>
+            <p class="text_center anime_text_center">購入しますか？</p>
           </ion-col>
         </ion-row>
         <ion-row>
           <ion-col>
-            <p class="text_center">商品名 {{ title }}</p>
+            <p class="text_center anime_text_center">商品名 {{ title }}</p>
           </ion-col>
         </ion-row>
         <ion-row>
           <ion-col>
-            <p class="text_center">値段 {{ price }} xym</p>
+            <p class="text_center anime_text_center">値段 {{ price }} xym</p>
           </ion-col>
         </ion-row>
         <ion-row><div class="height_2"></div></ion-row>
@@ -43,7 +52,7 @@
             <ion-button
               color="danger"
               @click="denialMultisigTransaction"
-              class="button_chice"
+              class="button_chice anime_text_center"
               >いいえ</ion-button
             >
           </ion-col>
@@ -51,7 +60,7 @@
             <ion-button
               color="success"
               @click="confirmMultisigTransaction"
-              class="button_chice"
+              class="button_chice anime_text_center"
               >はい</ion-button
             >
           </ion-col>
@@ -63,7 +72,7 @@
         <ion-row><div class="height_2"></div></ion-row>
         <ion-row>
           <ion-col>
-            <p class="text_center">そうしんちゅう。。。</p>
+            <p class="text_center anime_text_center">そうしんちゅう。。。</p>
           </ion-col>
         </ion-row>
         <ion-row>
@@ -155,7 +164,7 @@
     height: 150px;
   }
   .height {
-    height: 8em;
+    height: 4em;
   }
   .height_2 {
     height: 5em;
@@ -174,5 +183,8 @@
     height: 80px;
     display: block;
     margin: auto;
+  }
+  .anime_text_center {
+    font-family: neko;
   }
 </style>

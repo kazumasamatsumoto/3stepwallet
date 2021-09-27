@@ -22,11 +22,19 @@
           </ion-col>
           <ion-col size="0.5"></ion-col>
         </ion-row>
-        <ion-row><div class="blank"></div></ion-row>
+        <ion-row>
+          <ion-col size="1"></ion-col>
+          <ion-col
+            ><p class="text_center nes-balloon from-right anime_text_center">
+              かいものをする
+            </p></ion-col
+          >
+          <ion-col size="1"></ion-col>
+        </ion-row>
         <ion-row>
           <ion-col></ion-col>
           <ion-col>
-            <ion-button class="round" @click="shoppingStart"
+            <ion-button class="round nes-btn is-primary" @click="shoppingStart"
               ><img src="../../images/shopping.png"
             /></ion-button>
           </ion-col>
@@ -53,7 +61,7 @@
   import { getTodo } from "@/graphql/queries";
   import { GetTodoQuery } from "@/API";
   import { updateFunction } from "@/util/amplifyMethods";
-
+  import "nes.css/css/nes.min.css";
   export default {
     name: "Tab1",
     components: {
@@ -115,5 +123,8 @@
   }
   .text_center {
     text-align: center;
+  }
+  .anime_text_center {
+    font-family: neko;
   }
 </style>

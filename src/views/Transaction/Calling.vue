@@ -9,9 +9,18 @@
       <ion-grid>
         <ion-row><div class="height"></div></ion-row>
         <ion-row>
+          <ion-col size="1"></ion-col>
+          <ion-col>
+            <p class="text_center nes-balloon from-right anime_text_center">
+              でんわをしよう
+            </p>
+          </ion-col>
+          <ion-col size="1"></ion-col>
+        </ion-row>
+        <ion-row>
           <ion-col></ion-col>
           <ion-col>
-            <ion-button @click="testCall" class="round"
+            <ion-button @click="testCall" class="round nes-btn is-primary"
               ><img src="../../images/keitai_mukashi.png"
             /></ion-button>
           </ion-col>
@@ -70,9 +79,12 @@
     height: 150px;
   }
   .height {
-    height: 8em;
+    height: 4em;
   }
   .text_center {
     text-align: center;
+  }
+  .anime_text_center {
+    font-family: neko;
   }
 </style>
