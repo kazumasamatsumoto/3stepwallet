@@ -43,7 +43,7 @@
         </ion-row>
         <ion-row>
           <ion-col>
-            <p class="text_center anime_text_center">値段 {{ price }} xym</p>
+            <p class="text_center anime_text_center">値段 {{ price }} 円</p>
           </ion-col>
         </ion-row>
         <ion-row><div class="height_2"></div></ion-row>
@@ -99,6 +99,9 @@
     IonCol,
   } from "@ionic/vue";
   import { multisigTransaction } from "@/util/symbol";
+  import { API, graphqlOperation } from "aws-amplify";
+  import { getTodo } from "@/graphql/queries";
+  import { GetTodoQuery } from "@/API";
 
   export default {
     name: "Sending",
@@ -113,24 +116,49 @@
       IonRow,
       IonCol,
     },
+    created() {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+      // @ts-ignore
+      this.getTodo();
+    },
     data() {
       return {
         state: true,
         price: "",
         title: "",
+        count: 0,
         modalState: false,
       };
     },
     methods: {
+      async getTodo(this: { name: any; count: any }) {
+        const userId = localStorage.getItem("userId");
+        const sample = await API.graphql(
+          graphqlOperation(getTodo, {
+            id: userId,
+          })
+        );
+        if ("data" in sample && sample.data) {
+          const post = sample.data as GetTodoQuery;
+          if (post !== undefined) {
+            const userData = post.getTodo;
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            this.name = userData!.name;
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            this.count = userData!.count;
+          }
+        }
+      },
       denialMultisigTransaction() {
         location.href = "/tabs/sending";
       },
       confirmMultisigTransaction(this: {
         price: any;
         title: any;
+        count: any;
         state: boolean;
       }) {
-        multisigTransaction(+this.price, this.title).then((v) => {
+        multisigTransaction(+this.price, this.title, +this.count).then((v) => {
           this.state = !this.state;
           console.log(v, "test");
         });

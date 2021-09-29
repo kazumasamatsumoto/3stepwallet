@@ -1,16 +1,19 @@
 import { updateTodo } from "@/graphql/mutations";
 import { API, graphqlOperation } from "aws-amplify";
 
-export const updateFunction = async function(count: any): Promise<void> {
+export const updateFunction = async function(
+  count: any,
+  amount: any
+): Promise<void> {
   const userId = localStorage.getItem("userId");
   console.log("useriddes", userId);
   await API.graphql(
     graphqlOperation(updateTodo, {
       input: {
         id: userId,
-        count: count - 1,
+        count: count - amount,
       },
     })
   );
-  location.href = "/tabs/sending";
+  location.href = "/tabs/calling";
 };
