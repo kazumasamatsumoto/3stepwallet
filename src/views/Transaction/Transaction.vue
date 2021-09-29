@@ -18,15 +18,28 @@
         <ion-row>
           <ion-col size="0.5"></ion-col>
           <ion-col>
-            <p class="text_center">あなたの残り買い物回数は{{ count }}回です</p>
+            <p class="text_center">あなたの残高は{{ count }}円です</p>
+            <div class="health-bar" data-total="1000" data-value="1000">
+              <div class="bar">
+                <div class="hit"></div>
+              </div>
+            </div>
           </ion-col>
           <ion-col size="0.5"></ion-col>
         </ion-row>
-        <ion-row><div class="blank"></div></ion-row>
+        <ion-row>
+          <ion-col size="1"></ion-col>
+          <ion-col
+            ><p class="text_center nes-balloon from-right anime_text_center">
+              かいものをする
+            </p></ion-col
+          >
+          <ion-col size="1"></ion-col>
+        </ion-row>
         <ion-row>
           <ion-col></ion-col>
           <ion-col>
-            <ion-button class="round" @click="shoppingStart"
+            <ion-button class="round nes-btn is-primary" @click="shoppingStart"
               ><img src="../../images/shopping.png"
             /></ion-button>
           </ion-col>
@@ -52,8 +65,7 @@
   import { API, graphqlOperation } from "aws-amplify";
   import { getTodo } from "@/graphql/queries";
   import { GetTodoQuery } from "@/API";
-  import { updateFunction } from "@/util/amplifyMethods";
-
+  import "nes.css/css/nes.min.css";
   export default {
     name: "Tab1",
     components: {
@@ -76,14 +88,15 @@
       return {
         name: "",
         count: 0,
+        width: "100%",
       };
     },
     methods: {
-      shoppingStart(this: { count: any }) {
+      shoppingStart() {
         console.log("shopping start");
-        updateFunction(this.count);
+        location.href = "/tabs/sending";
       },
-      async getTodo(this: { name: any; count: any }) {
+      async getTodo(this: { name: any; count: any; width: any }) {
         const userId = localStorage.getItem("userId");
         const sample = await API.graphql(
           graphqlOperation(getTodo, {
@@ -98,6 +111,11 @@
             this.name = userData!.name;
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             this.count = userData!.count;
+            const newWidth = (this.count / 1000) * 100;
+            this.width = `${newWidth}%`;
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            const el = document.querySelector<HTMLElement>(".bar")!;
+            el.style.setProperty("width", this.width);
           }
         }
       },
@@ -115,5 +133,41 @@
   }
   .text_center {
     text-align: center;
+  }
+  .anime_text_center {
+    font-family: neko;
+  }
+  .health-bar {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    width: 200px;
+    height: 20px;
+    padding: 5px;
+    background: #ddd;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    position: relative;
+    margin: auto;
+  }
+  .bar {
+    background: #00cc66;
+    width: 100%;
+    height: 10px;
+    position: relative;
+
+    transition: width 0.5s linear;
+  }
+
+  .hit {
+    background: rgba(255, 255, 255, 0.6);
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 0px;
+
+    transition: width 0.5s linear;
   }
 </style>

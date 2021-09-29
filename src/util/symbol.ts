@@ -1,3 +1,4 @@
+import { updateFunction } from "./amplifyMethods";
 import {
   Account,
   Address,
@@ -17,7 +18,8 @@ import {
 
 export const multisigTransaction = async function(
   price: any,
-  title: any
+  title: any,
+  count: any
 ): Promise<void> {
   try {
     console.log(process.env.VUE_APP_WEB_SOCKET_URL);
@@ -129,7 +131,7 @@ export const multisigTransaction = async function(
           .subscribe(
             (x) => {
               console.log(x);
-              location.href = "/tabs/calling";
+              updateFunction(count, price);
             },
             (err) => console.log(err),
             () => listener.close()

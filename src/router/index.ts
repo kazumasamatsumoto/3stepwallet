@@ -32,6 +32,10 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import("@/views/Settings/AccountSetting.vue"),
       },
       {
+        path: "contact-setting",
+        component: () => import("@/views/Settings/ContactSetting.vue"),
+      },
+      {
         path: "calling",
         component: () => import("@/views/Transaction/Calling.vue"),
       },

@@ -16,3 +16,10 @@
     },
   });
 </script>
+
+<style>
+  @font-face {
+    font-family: neko;
+    src: url("./font/NuKinakoMochi-BarHrE-1.otf");
+  }
+</style>

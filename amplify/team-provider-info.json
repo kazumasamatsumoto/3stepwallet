@@ -17,5 +17,23 @@
         "3stepwalletfa0f4888": {}
       }
     }
+  },
+  "prod": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-3stepwallet-prod-210832-authRole",
+      "UnauthRoleArn": "arn:aws:iam::499116422250:role/amplify-3stepwallet-prod-210832-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::499116422250:role/amplify-3stepwallet-prod-210832-authRole",
+      "Region": "ap-northeast-1",
+      "DeploymentBucketName": "amplify-3stepwallet-prod-210832-deployment",
+      "UnauthRoleName": "amplify-3stepwallet-prod-210832-unauthRole",
+      "StackName": "amplify-3stepwallet-prod-210832",
+      "StackId": "arn:aws:cloudformation:ap-northeast-1:499116422250:stack/amplify-3stepwallet-prod-210832/fe2df770-1c66-11ec-b600-06acb8fccb05",
+      "AmplifyAppId": "d3vsr7tganuw8a"
+    },
+    "categories": {
+      "auth": {
+        "3stepwalletfa0f4888": {}
+      }
+    }
   }
 }

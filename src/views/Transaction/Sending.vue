@@ -9,9 +9,18 @@
       <ion-grid>
         <ion-row><div class="height"></div></ion-row>
         <ion-row>
+          <ion-col size="1"></ion-col>
+          <ion-col>
+            <p class="text_center nes-balloon from-right anime_text_center">
+              QRをよみこもう
+            </p>
+          </ion-col>
+          <ion-col size="1"></ion-col>
+        </ion-row>
+        <ion-row>
           <ion-col></ion-col>
           <ion-col>
-            <ion-button @click="openScanner" class="round"
+            <ion-button @click="openScanner" class="round nes-btn is-primary"
               ><img src="../../images/smartphone_qr_code_man.png"
             /></ion-button>
           </ion-col>
@@ -24,17 +33,17 @@
         <ion-row><div class="height_2"></div></ion-row>
         <ion-row>
           <ion-col>
-            <p class="text_center">購入しますか？</p>
+            <p class="text_center anime_text_center">購入しますか？</p>
           </ion-col>
         </ion-row>
         <ion-row>
           <ion-col>
-            <p class="text_center">商品名 {{ title }}</p>
+            <p class="text_center anime_text_center">商品名 {{ title }}</p>
           </ion-col>
         </ion-row>
         <ion-row>
           <ion-col>
-            <p class="text_center">値段 {{ price }} xym</p>
+            <p class="text_center anime_text_center">値段 {{ price }} 円</p>
           </ion-col>
         </ion-row>
         <ion-row><div class="height_2"></div></ion-row>
@@ -43,7 +52,7 @@
             <ion-button
               color="danger"
               @click="denialMultisigTransaction"
-              class="button_chice"
+              class="button_chice anime_text_center"
               >いいえ</ion-button
             >
           </ion-col>
@@ -51,7 +60,7 @@
             <ion-button
               color="success"
               @click="confirmMultisigTransaction"
-              class="button_chice"
+              class="button_chice anime_text_center"
               >はい</ion-button
             >
           </ion-col>
@@ -63,7 +72,7 @@
         <ion-row><div class="height_2"></div></ion-row>
         <ion-row>
           <ion-col>
-            <p class="text_center">そうしんちゅう。。。</p>
+            <p class="text_center anime_text_center">そうしんちゅう。。。</p>
           </ion-col>
         </ion-row>
         <ion-row>
@@ -90,6 +99,9 @@
     IonCol,
   } from "@ionic/vue";
   import { multisigTransaction } from "@/util/symbol";
+  import { API, graphqlOperation } from "aws-amplify";
+  import { getTodo } from "@/graphql/queries";
+  import { GetTodoQuery } from "@/API";
 
   export default {
     name: "Sending",
@@ -104,24 +116,49 @@
       IonRow,
       IonCol,
     },
+    created() {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+      // @ts-ignore
+      this.getTodo();
+    },
     data() {
       return {
         state: true,
         price: "",
         title: "",
+        count: 0,
         modalState: false,
       };
     },
     methods: {
+      async getTodo(this: { name: any; count: any }) {
+        const userId = localStorage.getItem("userId");
+        const sample = await API.graphql(
+          graphqlOperation(getTodo, {
+            id: userId,
+          })
+        );
+        if ("data" in sample && sample.data) {
+          const post = sample.data as GetTodoQuery;
+          if (post !== undefined) {
+            const userData = post.getTodo;
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            this.name = userData!.name;
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            this.count = userData!.count;
+          }
+        }
+      },
       denialMultisigTransaction() {
         location.href = "/tabs/sending";
       },
       confirmMultisigTransaction(this: {
         price: any;
         title: any;
+        count: any;
         state: boolean;
       }) {
-        multisigTransaction(+this.price, this.title).then((v) => {
+        multisigTransaction(+this.price, this.title, +this.count).then((v) => {
           this.state = !this.state;
           console.log(v, "test");
         });
@@ -155,7 +192,7 @@
     height: 150px;
   }
   .height {
-    height: 8em;
+    height: 4em;
   }
   .height_2 {
     height: 5em;
@@ -174,5 +211,8 @@
     height: 80px;
     display: block;
     margin: auto;
+  }
+  .anime_text_center {
+    font-family: neko;
   }
 </style>
