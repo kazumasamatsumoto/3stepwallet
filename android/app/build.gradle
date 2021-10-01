@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'deploygate' // この行を追加
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion

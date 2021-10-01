@@ -100,7 +100,7 @@
           graphqlOperation(updateTodo, {
             input: {
               id: id,
-              count: 10,
+              count: process.env.VUE_APP_COUNT,
             },
           })
         );
