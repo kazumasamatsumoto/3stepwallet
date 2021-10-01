@@ -2,7 +2,7 @@
   <ion-page>
     <ion-header>
       <ion-toolbar>
-        <ion-title>買い物をする</ion-title>
+        <ion-title>かいものをする</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content>
@@ -18,7 +18,7 @@
         <ion-row>
           <ion-col size="0.5"></ion-col>
           <ion-col>
-            <p class="text_center">あなたの残高は{{ count }}円です</p>
+            <p class="text_center">あなたのざんだかは{{ count }}円です</p>
             <div class="health-bar" data-total="1000" data-value="1000">
               <div class="bar">
                 <div class="hit"></div>
@@ -29,11 +29,9 @@
         </ion-row>
         <ion-row>
           <ion-col size="1"></ion-col>
-          <ion-col
-            ><p class="text_center nes-balloon from-right anime_text_center">
-              かいものをする
-            </p></ion-col
-          >
+          <ion-col>
+            <p class="text_center anime_text_center">かいものをする</p>
+          </ion-col>
           <ion-col size="1"></ion-col>
         </ion-row>
         <ion-row>
@@ -111,7 +109,8 @@
             this.name = userData!.name;
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             this.count = userData!.count;
-            const newWidth = (this.count / 1000) * 100;
+            const newWidth =
+              (this.count / Number(process.env.VUE_APP_COUNT)) * 100;
             this.width = `${newWidth}%`;
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             const el = document.querySelector<HTMLElement>(".bar")!;
@@ -133,9 +132,11 @@
   }
   .text_center {
     text-align: center;
+    z-index: 2;
   }
   .anime_text_center {
     font-family: neko;
+    z-index: 0;
   }
   .health-bar {
     -webkit-box-sizing: border-box;

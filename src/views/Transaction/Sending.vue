@@ -11,9 +11,7 @@
         <ion-row>
           <ion-col size="1"></ion-col>
           <ion-col>
-            <p class="text_center nes-balloon from-right anime_text_center">
-              QRをよみこもう
-            </p>
+            <p class="text_center anime_text_center">QRをよみこもう</p>
           </ion-col>
           <ion-col size="1"></ion-col>
         </ion-row>
@@ -33,17 +31,19 @@
         <ion-row><div class="height_2"></div></ion-row>
         <ion-row>
           <ion-col>
-            <p class="text_center anime_text_center">購入しますか？</p>
+            <p class="text_center anime_text_center">こうにゅうしますか？</p>
           </ion-col>
         </ion-row>
         <ion-row>
           <ion-col>
-            <p class="text_center anime_text_center">商品名 {{ title }}</p>
+            <p class="text_center anime_text_center">
+              しょうひんのなまえ {{ title }}
+            </p>
           </ion-col>
         </ion-row>
         <ion-row>
           <ion-col>
-            <p class="text_center anime_text_center">値段 {{ price }} 円</p>
+            <p class="text_center anime_text_center">ねだん {{ price }} えん</p>
           </ion-col>
         </ion-row>
         <ion-row><div class="height_2"></div></ion-row>
@@ -97,6 +97,7 @@
     IonGrid,
     IonRow,
     IonCol,
+    alertController,
   } from "@ionic/vue";
   import { multisigTransaction } from "@/util/symbol";
   import { API, graphqlOperation } from "aws-amplify";
@@ -149,19 +150,40 @@
           }
         }
       },
+
       denialMultisigTransaction() {
         location.href = "/tabs/sending";
       },
-      confirmMultisigTransaction(this: {
+      async confirmMultisigTransaction(this: {
         price: any;
         title: any;
         count: any;
         state: boolean;
       }) {
-        multisigTransaction(+this.price, this.title, +this.count).then((v) => {
-          this.state = !this.state;
-          console.log(v, "test");
-        });
+        if (+this.price < +this.count) {
+          multisigTransaction(+this.price, this.title, +this.count).then(
+            (v) => {
+              this.state = !this.state;
+              console.log(v, "test");
+            }
+          );
+        } else {
+          const alert = await alertController.create({
+            cssClass: "my-custom-class",
+            header: "Alert",
+            subHeader: "こうにゅうえらー",
+            message: "おかねがたりません",
+            buttons: [
+              {
+                text: "もどる",
+                handler: () => {
+                  location.href = "/tabs/tab1";
+                },
+              },
+            ],
+          });
+          return alert.present();
+        }
       },
 
       async openScanner(this: {
@@ -214,5 +236,8 @@
   }
   .anime_text_center {
     font-family: neko;
+  }
+  .my-custom-class {
+    --background: #e5e5e5;
   }
 </style>

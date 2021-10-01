@@ -85,7 +85,7 @@
           graphqlOperation(createTodo, {
             input: {
               name: this.name,
-              count: 1000,
+              count: process.env.VUE_APP_COUNT,
               contact: this.contact,
             },
           })

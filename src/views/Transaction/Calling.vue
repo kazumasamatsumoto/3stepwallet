@@ -2,7 +2,7 @@
   <ion-page>
     <ion-header>
       <ion-toolbar>
-        <ion-title v-if="contact === 'call'">電話をする</ion-title>
+        <ion-title v-if="contact === 'call'">でんわをする</ion-title>
         <ion-title v-if="contact === 'mail'">メールをする</ion-title>
       </ion-toolbar>
     </ion-header>
@@ -12,9 +12,7 @@
         <ion-row>
           <ion-col size="1"></ion-col>
           <ion-col>
-            <p class="text_center nes-balloon from-right anime_text_center">
-              でんわをしよう
-            </p>
+            <p class="text_center anime_text_center">でんわをしよう</p>
           </ion-col>
           <ion-col size="1"></ion-col>
         </ion-row>
@@ -35,9 +33,7 @@
         <ion-row>
           <ion-col size="1"></ion-col>
           <ion-col>
-            <p class="text_center nes-balloon from-right anime_text_center">
-              メールをしよう
-            </p>
+            <p class="text_center anime_text_center">メールをしよう</p>
           </ion-col>
           <ion-col size="1"></ion-col>
         </ion-row>
