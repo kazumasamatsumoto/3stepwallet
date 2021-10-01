@@ -170,7 +170,7 @@
         } else {
           const alert = await alertController.create({
             cssClass: "my-custom-class",
-            header: "Alert",
+            header: "あらーと",
             subHeader: "こうにゅうえらー",
             message: "おかねがたりません",
             buttons: [
@@ -238,6 +238,6 @@
     font-family: neko;
   }
   .my-custom-class {
-    --background: #e5e5e5;
+    --background: #ffffff;
   }
 </style>
