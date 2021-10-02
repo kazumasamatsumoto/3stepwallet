@@ -8,11 +8,11 @@
     <ion-content>
       <ion-grid>
         <ion-row>
-          <ion-col></ion-col>
           <ion-col>
-            <ion-button @click="reload">リロード</ion-button>
+            <ion-button expand="block" @click="reload"
+              >リロード</ion-button
+            >
           </ion-col>
-          <ion-col></ion-col>
         </ion-row>
         <ion-row>
           <ion-col size="1"></ion-col>
@@ -23,14 +23,16 @@
           <ion-col></ion-col>
           <ion-col
             ><ul id="example-1" style="list-style: none;">
-              <li v-for="item in sample" :key="item.transactionInfo.hash">
+              <li
+                v-for="item in sample"
+                :key="item.transactionInfo.aggregateHash"
+              >
                 <ion-card>
                   <ion-card-content>
-                    type: {{ item.type }} <br />
-                    version: {{ item.version }} <br />
-                    transactionHash: {{ item.transactionInfo.hash }} <br />
+                    メッセージ: {{ item.message.payload }} <br />
+                    ハッシュ値: {{ item.transactionInfo.aggregateHash }} <br />
                   </ion-card-content>
-                  <ion-button @click="presentAlert(item)">承認する</ion-button>
+                  <ion-button expand="block" @click="presentAlert(item)">承認する</ion-button>
                 </ion-card>
               </li>
             </ul></ion-col
@@ -87,6 +89,11 @@
     getUnConfirmTransactionList,
   } from "@/util/symbol";
   import { testCosign } from "@/util/cosign";
+  import {
+    AggregateTransaction,
+    RepositoryFactoryHttp,
+    TransactionGroup,
+  } from "symbol-sdk";
 
   export default {
     name: "Tab2",
@@ -116,13 +123,31 @@
       const test = await getTransactionList();
       const sample = test?.reverse();
       if (sample !== undefined) {
-        console.log(sample);
         this.confirmtransaction = sample;
       }
       const test2 = await getUnConfirmTransactionList();
+      const unConfirmTransactionInfo: any[] = [];
       if (test2 !== undefined) {
-        console.log(test2[0].transactionInfo);
-        this.sample = test2;
+        for (let i = 0; i < test2.length; i++) {
+          const hash = test2[i].transactionInfo?.hash as string;
+          const nodeUrl = process.env.VUE_APP_WEB_SOCKET_URL;
+          if (nodeUrl) {
+            const repositoryFactory = new RepositoryFactoryHttp(nodeUrl, {
+              websocketUrl:
+                "ws://ngl-dual-601.testnet.symboldev.network:3000/ws",
+              websocketInjected: WebSocket,
+            });
+            const transactionHttp = repositoryFactory.createTransactionRepository();
+
+            transactionHttp
+              .getTransaction(hash, TransactionGroup.Partial)
+              .subscribe((x) => {
+                const test = x as AggregateTransaction;
+                unConfirmTransactionInfo.push(test.innerTransactions[0]);
+                this.sample = unConfirmTransactionInfo;
+              });
+          }
+        }
       }
     },
     methods: {
@@ -134,7 +159,7 @@
           cssClass: "my-custom-class",
           header: "承認しますか？",
           subHeader: "",
-          message: item.transactionInfo.hash,
+          message: item.message.payload,
           buttons: [
             {
               text: "拒否",
@@ -147,7 +172,7 @@
             {
               text: "OK",
               handler: () => {
-                testCosign(item.transactionInfo.hash);
+                testCosign(item.transactionInfo.aggregateHash);
               },
             },
           ],

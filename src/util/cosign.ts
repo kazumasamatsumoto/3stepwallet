@@ -54,7 +54,10 @@ export const testCosign = function(hash: string) {
         )
       )
       .subscribe(
-        (announcedTransaction) => console.log(announcedTransaction),
+        (announcedTransaction) => {
+          console.log(announcedTransaction);
+          location.href = "/tabs/tab2";
+        },
         (err) => console.error(err)
       );
   }

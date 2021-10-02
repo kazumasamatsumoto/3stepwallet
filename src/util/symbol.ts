@@ -19,7 +19,8 @@ import {
 export const multisigTransaction = async function(
   price: any,
   title: any,
-  count: any
+  count: any,
+  name: string,
 ): Promise<void> {
   try {
     console.log(process.env.VUE_APP_WEB_SOCKET_URL);
@@ -83,7 +84,7 @@ export const multisigTransaction = async function(
             UInt64.fromUint(price * Math.pow(10, networkCurrencyDivisibility))
           ),
         ],
-        PlainMessage.create(`sending ${price} symbol.xym buy ${title}`),
+        PlainMessage.create(`商品名は ${title} 値段は ${price} 円 購入者は${name}さん`),
         networkType
       );
       /* start block 01 */
@@ -171,7 +172,6 @@ export const getTransactionList = async () => {
             .getTransaction(txHash, TransactionGroup.Confirmed)
             .toPromise()) as AggregateTransaction;
           const sample = test.innerTransactions[0] as TransferTransaction;
-          console.log(sample, `${i}番目`);
           transactionInfo.push(sample);
         }
       }
@@ -181,6 +181,28 @@ export const getTransactionList = async () => {
     console.log(error);
   }
 };
+
+export const getTransactionHash = (hash: string) => {
+  const transactionHash = hash;
+  /* end block 02 */
+
+  /* start block 03 */
+  const nodeUrl = process.env.VUE_APP_WEB_SOCKET_URL;
+  if (nodeUrl) {
+    const repositoryFactory = new RepositoryFactoryHttp(nodeUrl, {
+      websocketUrl: "ws://ngl-dual-601.testnet.symboldev.network:3000/ws",
+      websocketInjected: WebSocket,
+    });
+    const transactionHttp = repositoryFactory.createTransactionRepository();
+
+    transactionHttp
+      .getTransaction(transactionHash, TransactionGroup.Partial)
+      .subscribe((x) => {
+        console.log(x);
+        return x;
+      });
+  }
+}
 
 export const getUnConfirmTransactionList = async () => {
   try {

@@ -129,6 +129,7 @@
         title: "",
         count: 0,
         modalState: false,
+        name: ""
       };
     },
     methods: {
@@ -159,12 +160,13 @@
         title: any;
         count: any;
         state: boolean;
+        name: string;
       }) {
         if (+this.price < +this.count) {
-          multisigTransaction(+this.price, this.title, +this.count).then(
+          multisigTransaction(+this.price, this.title, +this.count, this.name).then(
             (v) => {
               this.state = !this.state;
-              console.log(v, "test");
+              console.log(v)
             }
           );
         } else {
