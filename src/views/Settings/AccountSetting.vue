@@ -11,6 +11,24 @@
         <ion-label position="floating">名前を入力してください</ion-label>
         <ion-input v-model="name"></ion-input>
       </ion-item>
+      <ion-item>
+        <ion-label position="floating">連絡先1</ion-label>
+        <ion-input v-model="callNumber1"></ion-input>
+        <ion-label position="floating">名前1</ion-label>
+        <ion-input v-model="callUser1"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">連絡先2</ion-label>
+        <ion-input v-model="callNumber2"></ion-input>
+        <ion-label position="floating">名前2</ion-label>
+        <ion-input v-model="callUser2"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">連絡先3</ion-label>
+        <ion-input v-model="callNumber3"></ion-input>
+        <ion-label position="floating">名前3</ion-label>
+        <ion-input v-model="callUser3"></ion-input>
+      </ion-item>
       <ion-radio-group v-model="contact" value="griff">
         <ion-item>
           <ion-label>電話</ion-label>
@@ -71,15 +89,36 @@
     setup() {
       const name = ref("");
       const contact = ref("call");
+      const callNumber1 = ref("");
+      const callNumber2 = ref("");
+      const callNumber3 = ref("");
+      const callUser1 = ref("");
+      const callUser2 = ref("");
+      const callUser3 = ref("");
 
       // eslint-disable-next-line vue/no-dupe-keys
-      return { name, contact };
+      return {
+        name,
+        contact,
+        callNumber1,
+        callNumber2,
+        callNumber3,
+        callUser1,
+        callUser2,
+        callUser3,
+      };
     },
     methods: {
-      sample(value: any) {
-        console.log(value);
-      },
-      async createFunction(this: { name: string; contact: string }) {
+      async createFunction(this: {
+        name: string;
+        contact: string;
+        callNumber1: string;
+        callUser1: string;
+        callNumber2: string;
+        callUser2: string;
+        callNumber3: string;
+        callUser3: string;
+      }) {
         console.log(this.name, this.contact);
         await API.graphql(
           graphqlOperation(createTodo, {
@@ -87,6 +126,12 @@
               name: this.name,
               count: process.env.VUE_APP_COUNT,
               contact: this.contact,
+              callNumber1: this.callNumber1,
+              callUser1: this.callUser1,
+              callNumber2: this.callNumber2,
+              callUser2: this.callUser2,
+              callNumber3: this.callNumber3,
+              callUser3: this.callUser3,
             },
           })
         );

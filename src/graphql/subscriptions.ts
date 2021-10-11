@@ -9,6 +9,12 @@ export const onCreateTodo = /* GraphQL */ `
       name
       count
       contact
+      callNumber1
+      callUser1
+      callNumber2
+      callUser2
+      callNumber3
+      callUser3
       createdAt
       updatedAt
     }
@@ -21,6 +27,12 @@ export const onUpdateTodo = /* GraphQL */ `
       name
       count
       contact
+      callNumber1
+      callUser1
+      callNumber2
+      callUser2
+      callNumber3
+      callUser3
       createdAt
       updatedAt
     }
@@ -33,6 +45,12 @@ export const onDeleteTodo = /* GraphQL */ `
       name
       count
       contact
+      callNumber1
+      callUser1
+      callNumber2
+      callUser2
+      callNumber3
+      callUser3
       createdAt
       updatedAt
     }

@@ -9,6 +9,12 @@ export const getTodo = /* GraphQL */ `
       name
       count
       contact
+      callNumber1
+      callUser1
+      callNumber2
+      callUser2
+      callNumber3
+      callUser3
       createdAt
       updatedAt
     }
@@ -26,6 +32,12 @@ export const listTodos = /* GraphQL */ `
         name
         count
         contact
+        callNumber1
+        callUser1
+        callNumber2
+        callUser2
+        callNumber3
+        callUser3
         createdAt
         updatedAt
       }

@@ -12,6 +12,12 @@ export const createTodo = /* GraphQL */ `
       name
       count
       contact
+      callNumber1
+      callUser1
+      callNumber2
+      callUser2
+      callNumber3
+      callUser3
       createdAt
       updatedAt
     }
@@ -27,6 +33,12 @@ export const updateTodo = /* GraphQL */ `
       name
       count
       contact
+      callNumber1
+      callUser1
+      callNumber2
+      callUser2
+      callNumber3
+      callUser3
       createdAt
       updatedAt
     }
@@ -42,6 +54,12 @@ export const deleteTodo = /* GraphQL */ `
       name
       count
       contact
+      callNumber1
+      callUser1
+      callNumber2
+      callUser2
+      callNumber3
+      callUser3
       createdAt
       updatedAt
     }

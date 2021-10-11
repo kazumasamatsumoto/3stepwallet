@@ -3,4 +3,10 @@ type Todo @model {
   name: String!
   count: Int!
   contact: String!
+  callNumber1: String
+  callUser1: String
+  callNumber2: String
+  callUser2: String
+  callNumber3: String
+  callUser3: String
 }

@@ -18,7 +18,10 @@
         <ion-row>
           <ion-col size="0.5"></ion-col>
           <ion-col>
-            <p class="text_center">あなたのざんだかは{{ count }}円です</p>
+            <p class="text_center">
+              あなたのざんだかは<span class="text_bold">{{ count }}</span
+              >円です
+            </p>
             <div class="health-bar" data-total="1000" data-value="1000">
               <div class="bar">
                 <div class="hit"></div>
@@ -38,7 +41,7 @@
           <ion-col></ion-col>
           <ion-col>
             <ion-button class="round nes-btn is-primary" @click="shoppingStart"
-              ><img src="../../images/shopping.png"
+              ><img src="../../images/shopping_reji.png"
             /></ion-button>
           </ion-col>
           <ion-col></ion-col>
@@ -133,6 +136,9 @@
   .text_center {
     text-align: center;
     z-index: 2;
+  }
+  .text_bold {
+    font-size: 30px;
   }
   .anime_text_center {
     font-family: neko;
