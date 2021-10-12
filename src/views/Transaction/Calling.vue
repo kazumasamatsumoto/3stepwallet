@@ -17,13 +17,33 @@
           <ion-col size="1"></ion-col>
         </ion-row>
         <ion-row>
-          <ion-col></ion-col>
+          <div style="height: 100px;"></div>
+        </ion-row>
+        <ion-row>
           <ion-col>
-            <ion-button @click="testCall" class="round nes-btn is-primary"
+            <ion-text class="user_font_size">{{ this.callUser1 }}</ion-text>
+            <ion-button
+              @click="testCall(this.callNumber1)"
+              class="round nes-btn is-primary"
+              ><img src="../../images/keitai_mukashi.png"/></ion-button
+          ></ion-col>
+          <ion-col>
+            <ion-text class="user_font_size">{{ this.callUser2 }}</ion-text>
+
+            <ion-button
+              @click="testCall(this.callNumber2)"
+              class="round nes-btn is-primary"
               ><img src="../../images/keitai_mukashi.png"
             /></ion-button>
           </ion-col>
-          <ion-col></ion-col>
+          <ion-col>
+            <ion-text class="user_font_size">{{ this.callUser3 }}</ion-text>
+
+            <ion-button
+              @click="testCall(this.callNumber3)"
+              class="round nes-btn is-primary"
+              ><img src="../../images/keitai_mukashi.png"/></ion-button
+          ></ion-col>
         </ion-row>
       </ion-grid>
     </ion-content>
@@ -38,13 +58,31 @@
           <ion-col size="1"></ion-col>
         </ion-row>
         <ion-row>
-          <ion-col></ion-col>
           <ion-col>
-            <ion-button @click="testSend" class="round nes-btn is-primary"
+            <ion-text class="user_font_size">{{ this.callUser1 }}</ion-text>
+
+            <ion-button
+              @click="testSend(this.callNumber1)"
+              class="round nes-btn is-primary"
+              ><img src="../../images/mail_man.png"/></ion-button
+          ></ion-col>
+          <ion-col>
+            <ion-text class="user_font_size">{{ this.callUser2 }}</ion-text>
+
+            <ion-button
+              @click="testSend(this.callNumber2)"
+              class="round nes-btn is-primary"
               ><img src="../../images/mail_man.png"
             /></ion-button>
           </ion-col>
-          <ion-col></ion-col>
+          <ion-col>
+            <ion-text class="user_font_size">{{ this.callUser3 }}</ion-text>
+
+            <ion-button
+              @click="testSend(this.callNumber3)"
+              class="round nes-btn is-primary"
+              ><img src="../../images/mail_man.png"/></ion-button
+          ></ion-col>
         </ion-row>
       </ion-grid>
     </ion-content>
@@ -66,10 +104,12 @@
     IonGrid,
     IonRow,
     IonCol,
+    IonText,
   } from "@ionic/vue";
   import { API, graphqlOperation } from "aws-amplify";
   import { getTodo } from "@/graphql/queries";
   import { GetTodoQuery } from "@/API";
+  import { ref } from "vue";
 
   export default {
     name: "Calling",
@@ -83,29 +123,36 @@
       IonGrid,
       IonRow,
       IonCol,
+      IonText,
     },
     created() {
       // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
       // @ts-ignore
       this.getTodo();
     },
-    data() {
-      return {
-        contact: "",
-        phoneNumber: "",
-      };
-    },
-    methods: {
-      testCall(this: { phoneNumber: any }) {
-        CallNumber.callNumber(this.phoneNumber, false)
+    setup() {
+      const name = ref("");
+      const contact = ref("call");
+      const callNumber1 = ref("");
+      const callNumber2 = ref("");
+      const callNumber3 = ref("");
+      const callUser1 = ref("");
+      const callUser2 = ref("");
+      const callUser3 = ref("");
+
+      function testCall(callNumber: any) {
+        console.log(callNumber);
+        CallNumber.callNumber(callNumber, false)
           .then((res) => {
             console.log("Launched dialer!", res);
             location.href = "/tabs/tab1";
           })
           .catch((err) => console.log("Error launching dialer", err));
-      },
-      testSend(this: { phoneNumber: any }) {
-        const number = this.phoneNumber;
+      }
+
+      function testSend(callNumber: any) {
+        console.log(callNumber);
+        const number = callNumber;
         const message = "Hello world";
 
         //CONFIGURATION
@@ -118,10 +165,33 @@
         };
         SMS.send(number, message, options);
         location.href = "/tabs/tab1";
-      },
-      async getTodo(this: { contact: any; email: any; phoneNumber: any }) {
+      }
+
+      // eslint-disable-next-line vue/no-dupe-keys
+      return {
+        name,
+        contact,
+        callNumber1,
+        callNumber2,
+        callNumber3,
+        callUser1,
+        callUser2,
+        callUser3,
+        testCall,
+        testSend,
+      };
+    },
+    methods: {
+      async getTodo(this: {
+        contact: any;
+        callNumber1: any;
+        callNumber2: any;
+        callNumber3: any;
+        callUser1: any;
+        callUser2: any;
+        callUser3: any;
+      }) {
         const userId = localStorage.getItem("userId");
-        this.phoneNumber = localStorage.getItem("phoneNumber");
         const sample = await API.graphql(
           graphqlOperation(getTodo, {
             id: userId,
@@ -133,6 +203,12 @@
             const userData = post.getTodo;
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             this.contact = userData!.contact;
+            this.callNumber1 = userData?.callNumber1;
+            this.callNumber2 = userData?.callNumber2;
+            this.callNumber3 = userData?.callNumber3;
+            this.callUser1 = userData?.callUser1;
+            this.callUser2 = userData?.callUser2;
+            this.callUser3 = userData?.callUser3;
           }
         }
       },
@@ -142,8 +218,8 @@
 
 <style>
   .round {
-    width: 150px;
-    height: 150px;
+    width: 100px;
+    height: 100px;
   }
   .height {
     height: 4em;
@@ -153,5 +229,8 @@
   }
   .anime_text_center {
     font-family: neko;
+  }
+  .user_font_size {
+    font-size: 12px;
   }
 </style>

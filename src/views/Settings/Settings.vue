@@ -6,30 +6,35 @@
       </ion-toolbar>
     </ion-header>
     <ion-content>
-      <ion-button href="/tabs/account-setting"
-        >アカウント作成ページへ</ion-button
-      >
-      <br />
-      <ion-button href="/tabs/contact-setting">連絡先設定ページへ</ion-button>
-      <br />
-      <ion-label>
-        ユーザー一覧
-      </ion-label>
-      <ul style="list-style: none;">
-        <li v-for="item in test" :key="item.id">
+      <ion-grid>
+        <ion-row>
+          <ion-button href="/tabs/account-setting"
+            >アカウント作成ページへ</ion-button
+          >
+        </ion-row>
+        <ion-row>
           <ion-card>
-            <ion-card-content>
-              {{ item.name + "さん" }} 残高{{ item.count + "円" }}
-              <ion-button @click="updateFunction(item.id)"
-                >残高リセット</ion-button
-              >
-              <ion-button @click="setDatas(item.id)"
-                >買い物するユーザーを選択します</ion-button
-              >
-            </ion-card-content>
+          <ion-card-title>
+          ユーザー一覧
+          </ion-card-title>
+            <ul style="display: contents;">
+              <li v-for="item in test" :key="item.id">
+                <ion-card color="success">
+                  <ion-card-content>
+                    {{ item.name + "さん" }} 残高{{ item.count + "円" }}
+                    <ion-button @click="updateFunction(item.id)"
+                      >残高リセット</ion-button
+                    >
+                    <ion-button @click="setDatas(item.id)"
+                      >買い物するユーザーを選択します</ion-button
+                    >
+                  </ion-card-content>
+                </ion-card>
+              </li>
+            </ul>
           </ion-card>
-        </li>
-      </ul>
+        </ion-row>
+      </ion-grid>
     </ion-content>
   </ion-page>
 </template>
@@ -42,9 +47,10 @@
     IonTitle,
     IonContent,
     IonButton,
-    IonLabel,
     IonCard,
     IonCardContent,
+    IonGrid,
+    IonCardTitle,
   } from "@ionic/vue";
   import { createTodo, updateTodo } from "@/graphql/mutations";
   import { API, graphqlOperation } from "aws-amplify";
@@ -61,8 +67,8 @@
       IonContent,
       IonPage,
       IonButton,
-
-      IonLabel,
+      IonGrid,
+      IonCardTitle,
       IonCard,
       IonCardContent,
     },

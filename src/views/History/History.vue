@@ -27,7 +27,7 @@
                 v-for="item in sample"
                 :key="item.transactionInfo.aggregateHash"
               >
-                <ion-card>
+                <ion-card color="warning">
                   <ion-card-content>
                     メッセージ: {{ item.message.payload }} <br />
                     ハッシュ値: {{ item.transactionInfo.aggregateHash }} <br />
@@ -52,7 +52,7 @@
                 v-for="item in confirmtransaction"
                 :key="item.transactionInfo.aggregateHash"
               >
-                <ion-card>
+                <ion-card color="success">
                   <ion-card-content>
                     送金金額: {{ item.mosaics[0].amount.lower / 1000000 }} xym
                     <br />
